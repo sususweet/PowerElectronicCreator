@@ -1,0 +1,9 @@
+!WARNING: Source file 'rts2800_ml.lib' has been linked into the project relative to variable 'CG_TOOL_ROOT'.  It is recommended, however, that you avoid linking resources from the build-tool directory - consider using build-options to reference include-files and libraries.
+
+
+!CONFIGURATION: 'com.ti.ccstudio.buildDefinitions.C2000.Release.2052852177' [Fri Sep 29 14:25:21 CST 2017]
+
+	!TOOL: 'com.ti.ccstudio.buildDefinitions.C2000_6.4.exe.compilerRelease.676676134'
+
+		!WARNING: Unresolved option: com.ti.ccstudio.buildDefinitions.C2000_6.4.exe.compilerRelease.676676134::!--symdebug:dwarf
+
