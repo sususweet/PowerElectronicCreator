@@ -15,10 +15,7 @@ extern float M;  //µ÷ÖÆ¶È
 extern float sina[30];
 extern float sinb[30];
 
-extern Uint32 i; 
-
-
-
+extern Uint32 i;
 
 //===========================================================================
 // No more.

@@ -37,13 +37,15 @@ interrupt void USER10_ISR(void);    // User Defined trap 10
 interrupt void USER11_ISR(void);    // User Defined trap 11
 
 // PIE模块组1中的中断服务程序:
-interrupt void  PDPINTA_ISR(void);   // EV-A
-interrupt void  PDPINTB_ISR(void);   // EV-B
-interrupt void  XINT1_ISR(void);     
-interrupt void  XINT2_ISR(void);
-interrupt void  ADCINT_ISR(void);    // ADC
-interrupt void  TINT0_ISR(void);     // Timer 0
-interrupt void  WAKEINT_ISR(void);   // WD
+interrupt void PDPINTA_ISR(void);   // EV-A
+interrupt void PDPINTB_ISR(void);   // EV-B
+interrupt void XINT1_ISR(void);
+
+interrupt void XINT2_ISR(void);
+
+interrupt void ADCINT_ISR(void);    // ADC
+interrupt void TINT0_ISR(void);     // Timer 0
+interrupt void WAKEINT_ISR(void);   // WD
 
 // PIE模块组2中的中断服务程序:
 interrupt void CMP1INT_ISR(void);   // EV-A
@@ -53,7 +55,7 @@ interrupt void T1PINT_ISR(void);    // EV-A
 interrupt void T1CINT_ISR(void);    // EV-A
 interrupt void T1UFINT_ISR(void);   // EV-A
 interrupt void T1OFINT_ISR(void);   // EV-A
-      
+
 // PIE模块组3中的中断服务程序：
 interrupt void T2PINT_ISR(void);    // EV-A
 interrupt void T2CINT_ISR(void);    // EV-A
@@ -62,7 +64,7 @@ interrupt void T2OFINT_ISR(void);   // EV-A
 interrupt void CAPINT1_ISR(void);   // EV-A
 interrupt void CAPINT2_ISR(void);   // EV-A
 interrupt void CAPINT3_ISR(void);   // EV-A
-      
+
 // PIE模块组4中的中断服务程序:
 interrupt void CMP4INT_ISR(void);   // EV-B
 interrupt void CMP5INT_ISR(void);   // EV-B
@@ -71,7 +73,7 @@ interrupt void T3PINT_ISR(void);    // EV-B
 interrupt void T3CINT_ISR(void);    // EV-B
 interrupt void T3UFINT_ISR(void);   // EV-B
 interrupt void T3OFINT_ISR(void);   // EV-B
-     
+
 // PIE模块组5中的中断服务程序:
 interrupt void T4PINT_ISR(void);    // EV-B
 interrupt void T4CINT_ISR(void);    // EV-B
@@ -86,8 +88,8 @@ interrupt void SPIRXINTA_ISR(void);   // SPI
 interrupt void SPITXINTA_ISR(void);    // SPI
 interrupt void MRINTA_ISR(void);    // McBSP
 interrupt void MXINTA_ISR(void);    // McBSP
- 
-   
+
+
 // PIE模块组9中的中断服务程序:
 interrupt void SCIRXINTA_ISR(void); // SCI-A
 interrupt void SCITXINTA_ISR(void); // SCI-A

@@ -24,26 +24,23 @@
 *
 ****************************************************************************/
 
-void InitGpio(void)
-{
+void InitGpio(void) {
 
-     EALLOW;
-     
-     // 将GPIO中和PWM相关的引脚设置为PWM功能
-     GpioMuxRegs.GPAMUX.bit.PWM1_GPIOA0=1;     //设置PWM1引脚
-     GpioMuxRegs.GPAMUX.bit.PWM2_GPIOA1=1;     //设置PWM2引脚
+    EALLOW;
 
-     GpioMuxRegs.GPAMUX.bit.PWM3_GPIOA2=1;     //设置PWM3引脚
-     GpioMuxRegs.GPAMUX.bit.PWM4_GPIOA3=1;     //设置PWM4引脚
+    // 将GPIO中和PWM相关的引脚设置为PWM功能
+    GpioMuxRegs.GPAMUX.bit.PWM1_GPIOA0 = 1;     //设置PWM1引脚
+    GpioMuxRegs.GPAMUX.bit.PWM2_GPIOA1 = 1;     //设置PWM2引脚
 
-     GpioMuxRegs.GPAMUX.bit.PWM5_GPIOA4=1;     //设置PWM5引脚
-     GpioMuxRegs.GPAMUX.bit.PWM6_GPIOA5=1;     //设置PWM6引脚
+    GpioMuxRegs.GPAMUX.bit.PWM3_GPIOA2 = 1;     //设置PWM3引脚
+    GpioMuxRegs.GPAMUX.bit.PWM4_GPIOA3 = 1;     //设置PWM4引脚
 
+    GpioMuxRegs.GPAMUX.bit.PWM5_GPIOA4 = 1;     //设置PWM5引脚
+    GpioMuxRegs.GPAMUX.bit.PWM6_GPIOA5 = 1;     //设置PWM6引脚
 
-     EDIS;
+    EDIS;
+}
 
-}	
-	
 //===========================================================================
 // No more.
 //===========================================================================
