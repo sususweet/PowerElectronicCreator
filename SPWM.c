@@ -61,6 +61,10 @@ void main(void)
 
 	InitPieVectTable();  //初始化PIE中断向量表	 
 	
+    EALLOW;	// This is needed to write to EALLOW protected registers
+    PieVectTable.ADCINT=&ADCINT_ISR;
+    EDIS;   // This is needed to disable write to EALLOW protected registers
+    
 	InitGpio();  //初始化Gpio口，选择PWM1~6功能口
 
     InitEv();  //初始化EV，时间管理器，管理PWM，此次实验的核心内容
@@ -71,12 +75,18 @@ void main(void)
 
     IER|=M_INT2;
 
+	InitAdc();
+	IER|=M_INT1;
+
 	EINT;  //开全局中断
 	ERTM;  //开实时中断
 	
 	EvaRegs.T1CON.bit.TENABLE=1;      //使能定时器T1计数操作
 
 	death_time=10;//1-15，初始值为10，对应死区时间为4.27us。
+    while(AdcRegs.ADC_ST_FLAG.bit.SEQ1_BSY==0){
+        AdcRegs.ADCTRL2.bit.SOC_SEQ1=1;
+    }
     while(1)
 	{    
     	  EvaRegs.DBTCONA.bit.DBT=death_time;       //死区定时器周期

@@ -54,6 +54,7 @@ void InitSysCtrl(void)
 //   SysCtrlRegs.PCLKCR.bit.EVBENCLK=1;
 // SysCtrlRegs.PCLKCR.bit.SCIENCLKA=1;
 // SysCtrlRegs.PCLKCR.bit.SCIENCLKB=1;
+   SysCtrlRegs.PCLKCR.bit.ADCENCLK=1;
 				
    EDIS;
 	

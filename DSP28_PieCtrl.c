@@ -29,7 +29,7 @@ void InitPieCtrl(void)
 	PieCtrl.PIECRTL.bit.ENPIE = 0;
 
 	// ½ûÖ¹PIEËùÓÐÖÐ¶Ï
-	PieCtrl.PIEIER1.all = 0;
+	PieCtrl.PIEIER1.all = 0x20;
 	PieCtrl.PIEIER2.all = 0;
 	PieCtrl.PIEIER3.all = 0;	
 	PieCtrl.PIEIER4.all = 0;

@@ -39,6 +39,7 @@ void InitGpio(void)
      GpioMuxRegs.GPAMUX.bit.PWM5_GPIOA4=1;     //设置PWM5引脚
      GpioMuxRegs.GPAMUX.bit.PWM6_GPIOA5=1;     //设置PWM6引脚
 
+
      EDIS;
 
 }	

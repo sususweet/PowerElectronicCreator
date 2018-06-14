@@ -4,6 +4,20 @@
 //#define Three_Time_Enabled
 
 double a_sin,b_sin,c_sin,frequency=50;
+
+float	a1[16];
+unsigned int a2=0;
+float	adclo=0.0;
+float Va_max=0.0;
+float Vb_max=0.0;
+float Vc_max=0.0;
+float Vuv_real=0.0;
+float Vvw_real=0.0;
+float Vwu_real=0.0;
+
+float Vvw_real_array[1000];
+int Vvw_real_array_index = 0;
+
 //---------------------------------------------------------------------------
 // INT13, INT14, NMI, XINT1, XINT2 的中断服务函数:
 //
@@ -292,6 +306,12 @@ interrupt void USER11_ISR(void)    // 用户定义的中断11
   // 返回;
 }
 
+
+double getRealVoltage(float ADC){
+	double real = ADC*297.8-429.3;
+	return real;
+}
+
 //---------------------------------------------------------------------------
 //以下为外设中断函数 
 //
@@ -302,12 +322,43 @@ interrupt void  ADCINT_ISR(void)     // ADC中断函数
   // 注意退出中断函数时需要先释放PIE，使得PIE能够响应同组其他中断 
   // PieCtrl.PIEACK.all = PIEACK_GROUP1;
   
-  // 下面两行只是为了编译而写的，插入代码后请将其删除
-  
-  // 中断函数代码
-     asm ("      ESTOP0");
-     for(;;);
+ 	IFR=0x0000;
+//	PieCtrl.PIEIFR1.all = 0;
+    PieCtrl.PIEACK.all=0xffff;
+    a2++;
+    a1[0]=((float)AdcRegs.RESULT0)*3.0/65520.0+adclo;
+    a1[1]=((float)AdcRegs.RESULT1)*3.0/65520.0+adclo;
+    a1[2]=((float)AdcRegs.RESULT2)*3.0/65520.0+adclo;
+    a1[3]=((float)AdcRegs.RESULT3)*3.0/65520.0+adclo;
+    a1[4]=((float)AdcRegs.RESULT4)*3.0/65520.0+adclo;
+    a1[5]=((float)AdcRegs.RESULT5)*3.0/65520.0+adclo;
+    a1[6]=((float)AdcRegs.RESULT6)*3.0/65520.0+adclo;
+    a1[7]=((float)AdcRegs.RESULT7)*3.0/65520.0+adclo;
+    a1[8]=((float)AdcRegs.RESULT8)*3.0/65520.0+adclo;
+    a1[9]=((float)AdcRegs.RESULT9)*3.0/65520.0+adclo;
+    a1[10]=((float)AdcRegs.RESULT10)*3.0/65520.0+adclo;
+    a1[11]=((float)AdcRegs.RESULT11)*3.0/65520.0+adclo;
+    a1[12]=((float)AdcRegs.RESULT12)*3.0/65520.0+adclo;
+    a1[13]=((float)AdcRegs.RESULT13)*3.0/65520.0+adclo;
+    a1[14]=((float)AdcRegs.RESULT14)*3.0/65520.0+adclo;
+    a1[15]=((float)AdcRegs.RESULT15)*3.0/65520.0+adclo;
 
+	if (Va_max < a1[4]) Va_max = a1[4];
+	if (Vb_max < a1[6]) Vb_max = a1[6];
+	if (Vc_max < a1[8]) Vc_max = a1[8];
+
+	
+	Vvw_real = getRealVoltage(a1[6]);
+	Vwu_real = getRealVoltage(a1[8]);
+	Vuv_real = -(Vvw_real+Vwu_real);
+
+	Vvw_real_array[Vvw_real_array_index] = Vvw_real;
+	Vvw_real_array_index++;
+	if (Vvw_real_array_index >= 1000) Vvw_real_array_index = 0;
+
+    AdcRegs.ADC_ST_FLAG.bit.INT_SEQ1_CLR=1;
+    AdcRegs.ADCTRL2.bit.SOC_SEQ1=1;
+    EINT;
   // 返回;
 }
 
