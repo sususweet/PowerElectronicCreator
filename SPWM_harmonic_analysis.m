@@ -1,10 +1,10 @@
 clc
 clear
 %常数定义
-A1=0.8;            %参考波幅值1V
+A1=0.8;            %参考波幅值0.8V
 f1=50;           %参考波频率50Hz
 A2=1;            %载波幅值1V
-f2=1000;         %载波频率1kHz
+f2=10000;         %载波频率10kHz
 pi=3.1415926;    %常数
 T1=1/f1;         %参考波周期
 T2=1/f2;         %载波周期
@@ -16,7 +16,7 @@ death_time=1;      %死区宽度，这里定性仿真，可取1、2、3.
 lab=1;%选择仿真内容代号，1表示不同调制度对谐波影响仿真，2表示死区仿真，3表示注入三次谐波仿真
 switch lab
     case 1
-       for t = 0:0.0001:0.1;       %for循环产生PWM波
+       for t = 0:0.00001:0.1;       %for循环产生PWM波
             u1(i)=A1*sin(w1*t);%参考波表达式
             if mod(t,T2)<T2/2
                 u2(i)=-A2+4*A2*mod(t,T2)/T2;
@@ -30,10 +30,12 @@ switch lab
             
             i=i+1;
        end
-        y = fft(uo,1001);
+        fx = 1:10000;
+        fx = (fx -1)*10;
+        y = fft(uo,10000);
         Y=abs(y);               %输出电压谐波FFT分析
         figure(1)
-        plot(Y)     %figure1为以当前调制度、当前频率输出的PWM波的fft波形，仿真时长为0.1s，所以每一格是10Hz，第一格（1）所在处为直流偏置，即0Hz
+        plot(fx,Y)     %figure1为以当前调制度、当前频率输出的PWM波的fft波形，仿真时长为0.1s，所以每一格是10Hz，第一格（1）所在处为直流偏置，即0Hz
         figure(2)
         subplot(3,1,1);  %figure2为调制波、载波、PWM波的波形
         plot(u1)
@@ -45,7 +47,7 @@ switch lab
         plot(uo);
         % plot(YY);
     case 2
-       for t = 0:0.0001:0.1;       %for循环产生PWM波
+       for t = 0:0.00001:0.1;       %for循环产生PWM波
             u1(i)=A1*sin(w1*t);%参考波表达式
             if mod(t,T2)<T2/2
                 u2(i)=-A2+4*A2*mod(t,T2)/T2;
@@ -57,7 +59,7 @@ switch lab
             end
             i=i+1;
        end
-       for i=2:1001
+       for i=2:10000
            if uo(i-1)*uo(i) == -1
                if death_time==1
                    uo(i)=0;
@@ -71,10 +73,12 @@ switch lab
                end    
            end
        end
-        y = fft(uo,1001);
+        fx = 1:10000;
+        fx = (fx -1)*10;
+        y = fft(uo,10000);
         Y=abs(y);               %输出电压谐波FFT分析
         figure(1)
-        plot(Y)     %figure1为以当前调制度、当前频率输出的PWM波的fft波形，仿真时长为0.1s，所以每一格是10Hz，第一格（1）所在处为直流偏置，即0Hz
+        plot(fx,Y)     %figure1为以当前调制度、当前频率输出的PWM波的fft波形，仿真时长为0.1s，所以每一格是10Hz，第一格（1）所在处为直流偏置，即0Hz
         figure(2)
         subplot(3,1,1);  %figure2为调制波、载波、PWM波的波形
         plot(u1)
@@ -87,7 +91,7 @@ switch lab
         % plot(YY);
     case 3
       A1=1.1;  %过调制，采用注入三次谐波的方式减小过调制引起的谐波，将lab3的FFT波形与lab1中A1=1.1的波形进行比较
-      for t = 0:0.0001:0.1;       %for循环产生PWM波
+      for t = 0:0.00001:0.1;       %for循环产生PWM波
             u1(i)=A1*sin(w1*t)+0.2*sin(3*w1*t);%参考波表达式
             if mod(t,T2)<T2/2
                 u2(i)=-A2+4*A2*mod(t,T2)/T2;
@@ -101,7 +105,7 @@ switch lab
             
             i=i+1;
        end
-        y = fft(uo,1001);
+        y = fft(uo,10000);
         Y=abs(y);               %输出电压谐波FFT分析
         figure(1)
         plot(Y)     %figure1为以当前调制度、当前频率输出的PWM波的fft波形，仿真时长为0.1s，所以每一格是10Hz，第一格（1）所在处为直流偏置，即0Hz

@@ -1,8 +1,9 @@
 #include "DSP28_Device.h"
 #include "math.h"
 #define TwoPi 6.28318
+//#define Three_Time_Enabled
 
-double a_sin,b_sin,frequency=50;
+double a_sin,b_sin,c_sin,frequency=50;
 //---------------------------------------------------------------------------
 // INT13, INT14, NMI, XINT1, XINT2 的中断服务函数:
 //
@@ -435,14 +436,32 @@ interrupt void T1PINT_ISR(void)    // 通用定时器T1的周期中断
 //	  }
 //
 //	}  // 同步调制的一种方法
-	//异步调制
-	a_sin=sin(TwoPi*frequency*i/10000);
-	b_sin=sin(TwoPi*frequency*i/10000-TwoPi/3);
-	        EvaRegs.CMPR1=EvaRegs.T1PR*((1.0+M*a_sin)/2.0); //A相
-			EvaRegs.CMPR2=EvaRegs.T1PR*((1.0+M*b_sin)/2.0); //B相
-	        EvaRegs.CMPR3=EvaRegs.T1PR*((1.0-M*(a_sin+b_sin))/2.0); //C相
-	i++;
-	if(frequency*i>10000) i-=10000/frequency;
+
+
+    // 异步调制，载波频率保持不变
+
+#ifdef Three_Time_Enabled
+    // 注入三次谐波
+    a_sin = sin(TwoPi * frequency * i / 10000) + 0.1666 * sin(3 * TwoPi * frequency * i / 10000);
+    b_sin = sin(TwoPi * frequency * i / 10000 - TwoPi / 3) + 0.1666 * sin(3 * TwoPi * frequency * i / 10000);
+    c_sin = sin(TwoPi * frequency * i / 10000 - 2 * TwoPi / 3) + 0.1666 * sin(3 * TwoPi * frequency * i / 10000);
+    EvaRegs.CMPR1 = EvaRegs.T1PR * ((1.0 + M * a_sin) / 2.0); //A相
+    EvaRegs.CMPR2 = EvaRegs.T1PR * ((1.0 + M * b_sin) / 2.0); //B相
+    EvaRegs.CMPR3 = EvaRegs.T1PR * ((1.0 + M * c_sin) / 2.0); //C相
+#else
+    // 不注入三次谐波
+    // 此处 10000 为10kHz的载波，frequency为调制波频率 50Hz，frequency/10000为1/N，
+    // 其中N为载波比，此处N=200?
+    // 计算三相三角波和正弦波比较值
+    a_sin=sin(TwoPi*frequency*i/10000);
+    b_sin=sin(TwoPi*frequency*i/10000-TwoPi/3);
+    EvaRegs.CMPR1 = EvaRegs.T1PR * ((1.0 + M * a_sin) / 2.0); //A相
+    EvaRegs.CMPR2 = EvaRegs.T1PR * ((1.0 + M * b_sin) / 2.0); //B相
+    EvaRegs.CMPR3=EvaRegs.T1PR*((1.0-M*(a_sin+b_sin))/2.0); //C相
+#endif
+
+    i++;
+    if (frequency * i > 10000) i -= 10000 / frequency;
 
     PieCtrl.PIEACK.bit.ACK2=1;   //响应同组中断
 	EvaRegs.EVAIFRA.bit.T1PINT=1;//清除中断标志位
