@@ -13,10 +13,10 @@ i=1;
 death_time=1;      %死区宽度，这里定性仿真，可取1、2、3.
 
 
-lab=1;%选择仿真内容代号，1表示不同调制度对谐波影响仿真，2表示死区仿真，3表示注入三次谐波仿真
+lab=3;%选择仿真内容代号，1表示不同调制度对谐波影响仿真，2表示死区仿真，3表示注入三次谐波仿真
 switch lab
     case 1
-       for t = 0:0.00001:0.1;       %for循环产生PWM波
+       for t = 0:0.000001:0.1;       %for循环产生PWM波
             u1(i)=A1*sin(w1*t);%参考波表达式
             if mod(t,T2)<T2/2
                 u2(i)=-A2+4*A2*mod(t,T2)/T2;
@@ -25,29 +25,32 @@ switch lab
             
             if u1(i)>u2(i)
                 uo(i)=1;
-            else uo(i)=-1;        %输出电压表达式
+            else
+                uo(i)=-1;        %输出电压表达式
             end
             
             i=i+1;
        end
-        fx = 1:10000;
+        fx = 1:100000;
         fx = (fx -1)*10;
-        y = fft(uo,10000);
-        Y=abs(y);               %输出电压谐波FFT分析
+        y = fft(uo,100000);
+        Y=abs(y)*2/100000;               %输出电压谐波FFT分析
         figure(1)
-        plot(fx,Y)     %figure1为以当前调制度、当前频率输出的PWM波的fft波形，仿真时长为0.1s，所以每一格是10Hz，第一格（1）所在处为直流偏置，即0Hz
+        plot(fx(1:100),Y(1:100))     %figure1为以当前调制度、当前频率输出的PWM波的fft波形，仿真时长为0.1s，所以每一格是10Hz，第一格（1）所在处为直流偏置，即0Hz
+        xlabel('频率f（Hz）');
+        ylabel('幅值');
         figure(2)
         subplot(3,1,1);  %figure2为调制波、载波、PWM波的波形
-        plot(u1)
+        plot(u1(1:40000))
         % plot(x);
         subplot(3,1,2);
-        plot(u2);
+        plot(u2(1:40000));
         % plot(y);
         subplot(3,1,3);
-        plot(uo);
+        plot(uo(1:40000));
         % plot(YY);
     case 2
-       for t = 0:0.00001:0.1;       %for循环产生PWM波
+       for t = 0:0.000001:0.1;       %for循环产生PWM波
             u1(i)=A1*sin(w1*t);%参考波表达式
             if mod(t,T2)<T2/2
                 u2(i)=-A2+4*A2*mod(t,T2)/T2;
@@ -59,7 +62,7 @@ switch lab
             end
             i=i+1;
        end
-       for i=2:10000
+       for i=2:100000
            if uo(i-1)*uo(i) == -1
                if death_time==1
                    uo(i)=0;
@@ -69,30 +72,31 @@ switch lab
                else
                    uo(i)=0;
                    uo(i+1)=0;
-                   uo(i+2)=0;
+                   uo(i-1)=0;
                end    
            end
        end
-        fx = 1:10000;
+        fx = 1:100000;
         fx = (fx -1)*10;
-        y = fft(uo,10000);
-        Y=abs(y);               %输出电压谐波FFT分析
+        y = fft(uo,100000);
+        Y=abs(y)*2/100000;               %输出电压谐波FFT分析
         figure(1)
-        plot(fx,Y)     %figure1为以当前调制度、当前频率输出的PWM波的fft波形，仿真时长为0.1s，所以每一格是10Hz，第一格（1）所在处为直流偏置，即0Hz
+        plot(fx(1:100),Y(1:100))     %figure1为以当前调制度、当前频率输出的PWM波的fft波形，仿真时长为0.1s，所以每一格是10Hz，第一格（1）所在处为直流偏置，即0Hz
+        xlabel('频率f（Hz）');
+        ylabel('幅值');
         figure(2)
         subplot(3,1,1);  %figure2为调制波、载波、PWM波的波形
-        plot(u1)
+        plot(u1(1:40000))
         % plot(x);
         subplot(3,1,2);
-        plot(u2);
+        plot(u2(1:40000));
         % plot(y);
         subplot(3,1,3);
-        plot(uo);
+        plot(uo(1:40000));
         % plot(YY);
     case 3
-      A1=1.1;  %过调制，采用注入三次谐波的方式减小过调制引起的谐波，将lab3的FFT波形与lab1中A1=1.1的波形进行比较
-      for t = 0:0.00001:0.1;       %for循环产生PWM波
-            u1(i)=A1*sin(w1*t)+0.2*sin(3*w1*t);%参考波表达式
+      for t = 0:0.000001:0.1;       %for循环产生PWM波
+            u1(i)=A1*sin(w1*t)+0.16666*A1*sin(3*w1*t);%参考波表达式
             if mod(t,T2)<T2/2
                 u2(i)=-A2+4*A2*mod(t,T2)/T2;
             else u2(i)=3*A2-4*A2*mod(t,T2)/T2;%载波表达式
@@ -105,19 +109,23 @@ switch lab
             
             i=i+1;
        end
-        y = fft(uo,10000);
-        Y=abs(y);               %输出电压谐波FFT分析
+        y = fft(uo,100000);
+        fx = 1:100000;
+        fx = (fx -1)*10;
+        Y=abs(y)*2/100000;               %输出电压谐波FFT分析
         figure(1)
-        plot(Y)     %figure1为以当前调制度、当前频率输出的PWM波的fft波形，仿真时长为0.1s，所以每一格是10Hz，第一格（1）所在处为直流偏置，即0Hz
+        plot(fx(1:100),Y(1:100))     %figure1为以当前调制度、当前频率输出的PWM波的fft波形，仿真时长为0.1s，所以每一格是10Hz，第一格（1）所在处为直流偏置，即0Hz
+        xlabel('频率f（Hz）');
+        ylabel('幅值');
         figure(2)
         subplot(3,1,1);  %figure2为调制波、载波、PWM波的波形
-        plot(u1)
+        plot(u1(1:40000))
         % plot(x);
         subplot(3,1,2);
-        plot(u2);
+        plot(u2(1:40000));
         % plot(y);
         subplot(3,1,3);
-        plot(uo);
+        plot(uo(1:40000));
         % plot(YY);  
 end
 
