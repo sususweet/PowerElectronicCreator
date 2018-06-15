@@ -10,7 +10,7 @@ T1=1/f1;         %参考波周期
 T2=1/f2;         %载波周期
 w1=2*pi*f1;      %参考波角速度
 i=1;  
-death_time=1;      %死区宽度，这里定性仿真，可取1、2、3、4
+death_time=2;      %死区宽度，这里定性仿真，可取1、2、3.
 
 
 lab=2;%选择仿真内容代号，1表示不同调制度对谐波影响仿真，2表示死区仿真，3表示注入三次谐波仿真
@@ -50,7 +50,7 @@ switch lab
         plot(uo(1:40000));
         % plot(YY);
     case 2
-       for t = 0:0.000001:0.1;       %for循环产生PWM波
+       for t = 0:0.00001:0.1;       %for循环产生PWM波
             u1(i)=A1*sin(w1*t);%参考波表达式
             if mod(t,T2)<T2/2
                 u2(i)=-A2+4*A2*mod(t,T2)/T2;
@@ -62,135 +62,40 @@ switch lab
             end
             i=i+1;
        end
-       for i=2:100001
+       for i=2:10000
            if uo(i-1)*uo(i) == -1
                if death_time==1
                    uo(i)=0;
-                   uo(i+1)=0;
-                   uo(i+2)=0;
-                   uo(i+3)=0;
-                   uo(i+4)=0;
-                   uo(i+5)=0;
-                   uo(i+6)=0;
-                   uo(i+7)=0;
-                   uo(i+8)=0;
-                   uo(i+9)=0;
                elseif death_time==2
                    uo(i)=0;
                    uo(i+1)=0;
-                   uo(i+2)=0;
-                   uo(i+3)=0;
-                   uo(i+4)=0;
-                   uo(i+5)=0;
-                   uo(i+6)=0;
-                   uo(i+7)=0;
-                   uo(i+8)=0;
-                   uo(i+9)=0;
-                   uo(i+10)=0;
-                   uo(i+11)=0;
-                   uo(i+12)=0;
-                   uo(i+13)=0;
-                   uo(i+14)=0;
-                   uo(i+15)=0;
-                   uo(i+16)=0;
-                   uo(i+17)=0;
-                   uo(i+18)=0;
-                   uo(i+19)=0;
-               elseif death_time==3
-                   uo(i)=0;
-                   uo(i+1)=0;
-                   uo(i+2)=0;
-                   uo(i+3)=0;
-                   uo(i+4)=0;
-                   uo(i+5)=0;
-                   uo(i+6)=0;
-                   uo(i+7)=0;
-                   uo(i+8)=0;
-                   uo(i+9)=0;
-                   uo(i+10)=0;
-                   uo(i+11)=0;
-                   uo(i+12)=0;
-                   uo(i+13)=0;
-                   uo(i+14)=0;
-                   uo(i+15)=0;
-                   uo(i+16)=0;
-                   uo(i+17)=0;
-                   uo(i+18)=0;
-                   uo(i+19)=0;
-                   uo(i+20)=0;
-                   uo(i+21)=0;
-                   uo(i+22)=0;
-                   uo(i+23)=0;
-                   uo(i+24)=0;
-                   uo(i+25)=0;
-                   uo(i+26)=0;
-                   uo(i+27)=0;
-                   uo(i+28)=0;
-                   uo(i+29)=0;
                else
                    uo(i)=0;
                    uo(i+1)=0;
                    uo(i+2)=0;
-                   uo(i+3)=0;
-                   uo(i+4)=0;
-                   uo(i+5)=0;
-                   uo(i+6)=0;
-                   uo(i+7)=0;
-                   uo(i+8)=0;
-                   uo(i+9)=0;
-                   uo(i+10)=0;
-                   uo(i+11)=0;
-                   uo(i+12)=0;
-                   uo(i+13)=0;
-                   uo(i+14)=0;
-                   uo(i+15)=0;
-                   uo(i+16)=0;
-                   uo(i+17)=0;
-                   uo(i+18)=0;
-                   uo(i+19)=0;
-                   uo(i+20)=0;
-                   uo(i+21)=0;
-                   uo(i+22)=0;
-                   uo(i+23)=0;
-                   uo(i+24)=0;
-                   uo(i+25)=0;
-                   uo(i+26)=0;
-                   uo(i+27)=0;
-                   uo(i+28)=0;
-                   uo(i+29)=0;
-                   uo(i+30)=0;
-                   uo(i+31)=0;
-                   uo(i+32)=0;
-                   uo(i+33)=0;
-                   uo(i+34)=0;
-                   uo(i+35)=0;
-                   uo(i+36)=0;
-                   uo(i+37)=0;
-                   uo(i+38)=0;
-                   uo(i+39)=0;
                end    
            end
        end
-        fx = 1:100000;
+        fx = 1:10000;
         fx = (fx -1)*10;
-        y = fft(uo,100000);
-        Y=abs(y)*2/100000;               %输出电压谐波FFT分析
+        y = fft(uo,10000);
+        Y=abs(y)*2/10000;               %输出电压谐波FFT分析
         figure(1)
         plot(fx(1:100),Y(1:100))     %figure1为以当前调制度、当前频率输出的PWM波的fft波形，仿真时长为0.1s，所以每一格是10Hz，第一格（1）所在处为直流偏置，即0Hz
         xlabel('频率f（Hz）');
         ylabel('幅值');
         figure(2)
         subplot(3,1,1);  %figure2为调制波、载波、PWM波的波形
-        plot(u1(1:40000))
+        plot(u1(1:4000))
         % plot(x);
         subplot(3,1,2);
-        plot(u2(1:40000));
+        plot(u2(1:4000));
         % plot(y);
         subplot(3,1,3);
-        plot(uo(1:40000));
+        plot(uo(1:4000));
         % plot(YY);
     case 3
-      for t = 0:0.000001:0.1;       %for循环产生PWM波
+      for t = 0:0.00001:0.1;       %for循环产生PWM波
             u1(i)=A1*sin(w1*t)+0.16666*A1*sin(3*w1*t);%参考波表达式
             if mod(t,T2)<T2/2
                 u2(i)=-A2+4*A2*mod(t,T2)/T2;
@@ -204,23 +109,23 @@ switch lab
             
             i=i+1;
        end
-        y = fft(uo,100000);
-        fx = 1:100000;
+        y = fft(uo,10000);
+        fx = 1:10000;
         fx = (fx -1)*10;
-        Y=abs(y)*2/100000;               %输出电压谐波FFT分析
+        Y=abs(y)*2/10000;               %输出电压谐波FFT分析
         figure(1)
         plot(fx(1:100),Y(1:100))     %figure1为以当前调制度、当前频率输出的PWM波的fft波形，仿真时长为0.1s，所以每一格是10Hz，第一格（1）所在处为直流偏置，即0Hz
         xlabel('频率f（Hz）');
         ylabel('幅值');
         figure(2)
         subplot(3,1,1);  %figure2为调制波、载波、PWM波的波形
-        plot(u1(1:40000))
+        plot(u1(1:4000))
         % plot(x);
         subplot(3,1,2);
-        plot(u2(1:40000));
+        plot(u2(1:4000));
         % plot(y);
         subplot(3,1,3);
-        plot(uo(1:40000));
+        plot(uo(1:4000));
         % plot(YY);  
 end
 
